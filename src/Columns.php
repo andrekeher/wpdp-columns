@@ -44,6 +44,15 @@ class Columns
         }
     }
     
+    public function removeColumns($keys)
+    {
+        foreach ($keys as $key) {
+            if (isset($this->columns[$key])) {
+                unset($this->columns[$key]);
+            }
+        }
+    }
+    
     public function setDataFunction(callable $function)
     {
         $this->dataFunction = $function;
