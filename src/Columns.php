@@ -27,14 +27,14 @@ class Columns
         return $this->columns;
     }
     
-    public function setColumns($columns = [])
+    public function setColumns($columns)
     {
-        $this->columns = $columns;
+        $this->columns = (array) $columns;
     }
     
-    public function appendColumn($column = [])
+    public function appendColumn($column)
     {
-        $this->columns = array_merge($this->columns, $column);
+        $this->columns = array_merge($this->columns, (array) $column);
     }
     
     public function removeColumn($key)
