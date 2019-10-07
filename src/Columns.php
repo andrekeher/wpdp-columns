@@ -4,13 +4,13 @@ namespace AndreKeher\WPDP;
 
 class Columns
 {
-    private $postType;
+    private $postTypes;
     private $columns;
     private $dataFunction;
     
-    public function __construct($postType)
+    public function __construct($postTypes)
     {
-        $this->postType = $postType;
+        $this->postTypes = (array) $postTypes;
         $this->columns = [
             'cb' => '<input type="checkbox" />',
             'title' => __('Title'),
@@ -68,7 +68,9 @@ class Columns
         if (empty($this->dataFunction)) {
             wp_die(__('Please, add the data function.'));
         }
-        add_filter(sprintf('manage_%s_posts_columns', $this->postType), array($this, 'filterColumns'));
-        add_action(sprintf('manage_%s_posts_custom_column', $this->postType), $this->dataFunction, 10, 2);
+        foreach ($this->postTypes as $postType) {
+            add_filter(sprintf('manage_%s_posts_columns', $postType), array($this, 'filterColumns'));
+            add_action(sprintf('manage_%s_posts_custom_column', $postType), $this->dataFunction, 10, 2);   
+        }
     }
 }
