@@ -11,15 +11,7 @@ class Columns
     public function __construct($postTypes)
     {
         $this->postTypes = (array) $postTypes;
-        $this->columns = [
-            'cb' => '<input type="checkbox" />',
-            'title' => __('Title'),
-            'author' => __('Author'),
-            'categories' => __('Categories'),
-            'tags' => __('Tags'),
-            'comments' => __('<span class="vers comment-grey-bubble" title="' . esc_attr__('Comments') . '"><span class="screen-reader-text">' . __('Comments') . '</span></span>'),
-            'date' => __('Date'),
-        ];
+        $this->columns = [];
     }
     
     public function getColumns()
@@ -60,7 +52,7 @@ class Columns
     
     public function filterColumns($columns)
     {
-        return $this->columns;
+        return array_merge($columns, $this->columns);
     }
     
     public function init()
