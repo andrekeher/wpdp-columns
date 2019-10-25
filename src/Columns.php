@@ -7,6 +7,8 @@ class Columns
     private $postTypes;
     private $columns;
     private $dataFunction;
+    private $removedColums;
+    private $keepDefaultColumns =  true;
     
     public function __construct($postTypes)
     {
@@ -36,13 +38,14 @@ class Columns
         }
     }
     
-    public function removeColumns($keys)
+    public function removeColumns($columns)
     {
-        foreach ($keys as $key) {
-            if (isset($this->columns[$key])) {
-                unset($this->columns[$key]);
-            }
-        }
+        $this->removedColums = (array) $columns;
+    }
+    
+    public function keepDefaultColumns($value)
+    {
+        $this->keepDefaultColumns = (bool) $value;
     }
     
     public function setDataFunction(callable $function)
@@ -52,7 +55,17 @@ class Columns
     
     public function filterColumns($columns)
     {
-        return array_merge($columns, $this->columns);
+        if (!empty($this->removedColums)) {
+            foreach ($this->removedColums as $key) {
+                if (isset($columns[$key])) {
+                    unset($columns[$key]);
+                }
+            }
+        }
+        if ($this->keepDefaultColumns) {
+            return array_merge($columns, $this->columns);
+        }
+        return $this->columns;
     }
     
     public function init()
@@ -62,7 +75,7 @@ class Columns
         }
         foreach ($this->postTypes as $postType) {
             add_filter(sprintf('manage_%s_posts_columns', $postType), array($this, 'filterColumns'));
-            add_action(sprintf('manage_%s_posts_custom_column', $postType), $this->dataFunction, 10, 2);   
+            add_action(sprintf('manage_%s_posts_custom_column', $postType), $this->dataFunction, 10, 2);
         }
     }
 }
